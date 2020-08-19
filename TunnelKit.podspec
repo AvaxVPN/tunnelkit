@@ -1,11 +1,11 @@
 Pod::Spec.new do |s|
     s.name              = "TunnelKit"
-    s.version           = "2.2.4"
+    s.version           = "2.3.0"
     s.summary           = "Non-official OpenVPN client for Apple platforms."
 
     s.homepage          = "https://github.com/passepartoutvpn/tunnelkit"
     s.license           = { :type => "GPLv3", :file => "LICENSE" }
-    s.author            = { "Davide De Rosa" => "keeshux@gmail.com" }
+    s.author            = { "Davide De Rosa" => "me@davidederosa.com" }
     s.source            = { :git => "https://github.com/passepartoutvpn/tunnelkit.git", :tag => "v#{s.version}" }
     s.swift_version     = "5.0"
 
@@ -31,6 +31,13 @@ Pod::Spec.new do |s|
 
         p.dependency "SwiftyBeaver"
         p.dependency "TunnelKit/Core"
+    end
+
+    s.subspec "Manager" do |p|
+        p.source_files          = "TunnelKit/Sources/Manager/**/*.swift"
+        p.frameworks            = "NetworkExtension"
+
+        p.dependency "SwiftyBeaver"
     end
 
     s.subspec "Protocols" do |t|

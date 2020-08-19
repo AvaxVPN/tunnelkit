@@ -153,6 +153,15 @@ There are no physical network implementations (e.g. UDP or TCP) in this module.
 
 Provides a layer on top of the NetworkExtension framework. Most importantly, bridges native [NWUDPSession][ne-udp] and [NWTCPConnection][ne-tcp] to an abstract `GenericSocket` interface, thus making a multi-protocol VPN dramatically easier to manage.
 
+### Manager
+
+This subspec includes convenient classes to control the VPN tunnel from your app without the NetworkExtension headaches. Have a look at `VPNProvider` implementations:
+
+- `MockVPNProvider` (default, useful to test on simulator)
+- `StandardVPNProvider`
+
+Set `VPN.shared` to either of them at app launch time.
+
 ### Protocols/OpenVPN
 
 Here you will find the low-level entities on top of which an OpenVPN connection is established. Code is mixed Swift and Obj-C, most of it is not exposed to consumers. The module depends on OpenSSL.
@@ -168,6 +177,8 @@ A debug log snapshot is optionally maintained and shared by the tunnel provider 
 Due to the restrictive license (GPLv2), LZO support is provided as an optional subspec.
 
 ## License
+
+Copyright (c) 2020 Davide De Rosa. All rights reserved.
 
 ### Part I
 
@@ -191,14 +202,14 @@ For more details please see [CONTRIBUTING][contrib-readme].
 
 ## Credits
 
-- [lzo][dep-lzo-website] - © 1996 - 2017 Markus F.X.J. Oberhumer
-- [PIATunnel][dep-piatunnel-repo] - © 2018-Present Private Internet Access
+- [lzo][dep-lzo-website] - Copyright (c) 1996-2017 Markus F.X.J. Oberhumer
+- [PIATunnel][dep-piatunnel-repo] - Copyright (c) 2018-Present Private Internet Access
 - [SURFnet][surfnet]
-- [SwiftyBeaver][dep-swiftybeaver-repo] - © 2015 Sebastian Kreutzberger
+- [SwiftyBeaver][dep-swiftybeaver-repo] - Copyright (c) 2015 Sebastian Kreutzberger
 
 This product includes software developed by the OpenSSL Project for use in the OpenSSL Toolkit. ([https://www.openssl.org/][dep-openssl])
 
-© 2002-2018 OpenVPN Inc. - OpenVPN is a registered trademark of OpenVPN Inc.
+Copyright (c) 2002-2018 OpenVPN Inc. - OpenVPN is a registered trademark of OpenVPN Inc.
 
 ## Contacts
 

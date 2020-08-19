@@ -7,6 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Use active profile name in VPN configuration (device settings).
+
+### Fixed
+
+- Incorrect tunnel bundle identifiers in Demo. [#176](https://github.com/passepartoutvpn/tunnelkit/issues/176)
+- IV_PLAT in peer info was hardcoded to "mac" (pahnev). [#177](https://github.com/passepartoutvpn/tunnelkit/pull/177)
+
+# 2.2.7 (2020-06-11)
+
+### Fixed
+
+- Code cleanup.
+
+## 2.2.6 (2020-05-12)
+
+### Fixed
+
+- Address concerns from Guido Vranken fuzzers. [#141](https://github.com/passepartoutvpn/tunnelkit/pull/141)
+
+## 2.2.5 (2020-05-12)
+
+### Changed
+
+- Improve IP Header parsing (roop). [#171](https://github.com/passepartoutvpn/tunnelkit/pull/171)
+
+## 2.2.4 (2020-05-10)
+
 ### Added
 
 - Support for SAN hostname in certificates (jaroslavas). [#168](https://github.com/passepartoutvpn/tunnelkit/pull/168)
@@ -17,13 +46,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Restore tunnel MTU setting (ueshiba). [#148](https://github.com/passepartoutvpn/tunnelkit/pull/148)
 - Transient connected state upon connection failure (rob-patchett). [#128](https://github.com/passepartoutvpn/tunnelkit/pull/128)
 
-## 2.2.3 (2019-04-21)
+## 2.2.3 (2020-04-21)
 
 ### Changed
 
 - Upgrade OpenSSL to 1.1.1g. [#166](https://github.com/passepartoutvpn/tunnelkit/issues/166)
 
-## 2.2.2 (2019-04-20)
+## 2.2.2 (2020-04-20)
 
 ### Changed
 

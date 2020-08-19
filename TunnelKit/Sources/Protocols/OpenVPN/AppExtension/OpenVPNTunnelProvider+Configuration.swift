@@ -57,6 +57,7 @@ extension OpenVPNTunnelProvider {
             debugLogFormat: nil,
             masksPrivateData: true,
             xorMask: 0
+            versionIdentifier: nil
         )
         
         /// The session configuration.
@@ -73,8 +74,12 @@ extension OpenVPNTunnelProvider {
         /// The MTU of the link.
         public var mtu: Int
         
+        /// XOR Mask
         public var xorMask: UInt8
-        
+
+        /// Optional version identifier about the client pushed to server in peer-info as `IV_UI_VER`.
+        public var versionIdentifier: String?
+
         // MARK: Debugging
         
         /// Enables debugging.
@@ -102,6 +107,7 @@ extension OpenVPNTunnelProvider {
             debugLogFormat = ConfigurationBuilder.defaults.debugLogFormat
             masksPrivateData = ConfigurationBuilder.defaults.masksPrivateData
             xorMask = ConfigurationBuilder.defaults.xorMask
+            versionIdentifier = ConfigurationBuilder.defaults.versionIdentifier
         }
         
         fileprivate init(providerConfiguration: [String: Any]) throws {
@@ -117,6 +123,7 @@ extension OpenVPNTunnelProvider {
             }
             masksPrivateData = providerConfiguration[S.masksPrivateData] as? Bool ?? ConfigurationBuilder.defaults.masksPrivateData
             xorMask = providerConfiguration[S.xorMask] as? UInt8 ?? ConfigurationBuilder.defaults.xorMask
+            versionIdentifier = providerConfiguration[S.versionIdentifier] as? String ?? ConfigurationBuilder.defaults.versionIdentifier
 
             guard !prefersResolvedAddresses || !(resolvedAddresses?.isEmpty ?? true) else {
                 throw ProviderConfigurationError.parameter(name: "protocolConfiguration.providerConfiguration[\(S.prefersResolvedAddresses)] is true but no [\(S.resolvedAddresses)]")
@@ -138,6 +145,7 @@ extension OpenVPNTunnelProvider {
                 debugLogFormat: shouldDebug ? debugLogFormat : nil,
                 masksPrivateData: masksPrivateData,
                 xorMask: xorMask
+                versionIdentifier: versionIdentifier
             )
         }
     }
@@ -146,7 +154,9 @@ extension OpenVPNTunnelProvider {
     public struct Configuration: Codable {
         struct Keys {
             static let appGroup = "AppGroup"
-            
+
+            static let versionIdentifier = "VersionIdentifier"
+
             // MARK: SessionConfiguration
 
             static let cipherAlgorithm = "CipherAlgorithm"
@@ -241,7 +251,11 @@ extension OpenVPNTunnelProvider {
         
         /// - Seealso: `OpenVPNTunnelProvider.ConfigurationBuilder.xorMask`
         public let xorMask: UInt8
-        
+
+        /// - Seealso: `OpenVPNTunnelProvider.ConfigurationBuilder.versionIdentifier`
+        public let versionIdentifier: String?
+
+      
         // MARK: Shortcuts
 
         static let debugLogFilename = "debug.log"
@@ -380,6 +394,9 @@ extension OpenVPNTunnelProvider {
             if let masksPrivateData = masksPrivateData {
                 dict[S.masksPrivateData] = masksPrivateData
             }
+            if let versionIdentifier = versionIdentifier {
+                dict[S.versionIdentifier] = versionIdentifier
+            }
             return dict
         }
         
@@ -442,6 +459,7 @@ extension OpenVPNTunnelProvider.Configuration {
         builder.debugLogFormat = debugLogFormat
         builder.masksPrivateData = masksPrivateData
         builder.xorMask = xorMask
+        builder.versionIdentifier = versionIdentifier
         return builder
     }
 }
