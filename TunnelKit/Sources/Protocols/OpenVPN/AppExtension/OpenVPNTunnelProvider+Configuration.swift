@@ -3,7 +3,7 @@
 //  TunnelKit
 //
 //  Created by Davide De Rosa on 10/23/17.
-//  Copyright (c) 2020 Davide De Rosa. All rights reserved.
+//  Copyright (c) 2020 Davide De Rosa, Sam Foxman. All rights reserved.
 //
 //  https://github.com/passepartoutvpn
 //
@@ -56,6 +56,7 @@ extension OpenVPNTunnelProvider {
             shouldDebug: false,
             debugLogFormat: nil,
             masksPrivateData: true,
+            xorMask: 0
             versionIdentifier: nil
         )
         
@@ -72,6 +73,9 @@ extension OpenVPNTunnelProvider {
         
         /// The MTU of the link.
         public var mtu: Int
+        
+        /// XOR Mask
+        public var xorMask: UInt8
 
         /// Optional version identifier about the client pushed to server in peer-info as `IV_UI_VER`.
         public var versionIdentifier: String?
@@ -102,6 +106,7 @@ extension OpenVPNTunnelProvider {
             shouldDebug = ConfigurationBuilder.defaults.shouldDebug
             debugLogFormat = ConfigurationBuilder.defaults.debugLogFormat
             masksPrivateData = ConfigurationBuilder.defaults.masksPrivateData
+            xorMask = ConfigurationBuilder.defaults.xorMask
             versionIdentifier = ConfigurationBuilder.defaults.versionIdentifier
         }
         
@@ -117,6 +122,7 @@ extension OpenVPNTunnelProvider {
                 debugLogFormat = providerConfiguration[S.debugLogFormat] as? String
             }
             masksPrivateData = providerConfiguration[S.masksPrivateData] as? Bool ?? ConfigurationBuilder.defaults.masksPrivateData
+            xorMask = providerConfiguration[S.xorMask] as? UInt8 ?? ConfigurationBuilder.defaults.xorMask
             versionIdentifier = providerConfiguration[S.versionIdentifier] as? String ?? ConfigurationBuilder.defaults.versionIdentifier
 
             guard !prefersResolvedAddresses || !(resolvedAddresses?.isEmpty ?? true) else {
@@ -138,6 +144,7 @@ extension OpenVPNTunnelProvider {
                 shouldDebug: shouldDebug,
                 debugLogFormat: shouldDebug ? debugLogFormat : nil,
                 masksPrivateData: masksPrivateData,
+                xorMask: xorMask
                 versionIdentifier: versionIdentifier
             )
         }
@@ -202,6 +209,8 @@ extension OpenVPNTunnelProvider {
             
             static let routingPolicies = "RoutingPolicies"
             
+            static let xorMask = "XorMask"
+            
             // MARK: Customization
 
             static let prefersResolvedAddresses = "PrefersResolvedAddresses"
@@ -239,10 +248,14 @@ extension OpenVPNTunnelProvider {
         
         /// - Seealso: `OpenVPNTunnelProvider.ConfigurationBuilder.masksPrivateData`
         public let masksPrivateData: Bool?
+        
+        /// - Seealso: `OpenVPNTunnelProvider.ConfigurationBuilder.xorMask`
+        public let xorMask: UInt8
 
         /// - Seealso: `OpenVPNTunnelProvider.ConfigurationBuilder.versionIdentifier`
         public let versionIdentifier: String?
 
+      
         // MARK: Shortcuts
 
         static let debugLogFilename = "debug.log"
@@ -368,7 +381,8 @@ extension OpenVPNTunnelProvider {
                 S.ca: ca.pem,
                 S.endpointProtocols: endpointProtocols.map { $0.rawValue },
                 S.mtu: mtu,
-                S.debug: shouldDebug
+                S.debug: shouldDebug,
+                S.xorMask: xorMask
             ]
             sessionConfiguration.store(to: &dict)
             if let resolvedAddresses = resolvedAddresses {
@@ -444,6 +458,7 @@ extension OpenVPNTunnelProvider.Configuration {
         builder.shouldDebug = shouldDebug
         builder.debugLogFormat = debugLogFormat
         builder.masksPrivateData = masksPrivateData
+        builder.xorMask = xorMask
         builder.versionIdentifier = versionIdentifier
         return builder
     }
@@ -574,6 +589,9 @@ private extension OpenVPN.Configuration {
                 return policy
             }
         }
+        if let xorMask = providerConfiguration[S.xorMask] as? UInt8 {
+            builder.xorMask = xorMask
+        }
         return builder.build()
     }
     
@@ -649,6 +667,7 @@ private extension OpenVPN.Configuration {
         if let routingPolicies = routingPolicies {
             dict[S.routingPolicies] = routingPolicies.map { $0.rawValue }
         }
+        dict[S.xorMask] = xorMask
     }
     
     func print() {
@@ -732,5 +751,6 @@ private extension OpenVPN.Configuration {
         if let proxyBypassDomains = proxyBypassDomains {
             log.info("\tProxy bypass domains: \(proxyBypassDomains.maskedDescription)")
         }
+        log.info("\tXOR Mask: \(xorMask)")
     }
 }
